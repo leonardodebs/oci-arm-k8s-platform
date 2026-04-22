@@ -29,58 +29,9 @@ Este projeto utiliza o que há de mais moderno em infraestrutura como código e 
 
 ![Arquitetura do Sistema](docs/architecture.png)
 
-```mermaid
-graph TB
-    subgraph OCI["Oracle Cloud Infrastructure"]
-        subgraph VCN["Virtual Cloud Network"]
-            subgraph Subnet["Subnet Pública"]
-                IGW["Internet Gateway"]
-                NGW["NAT Gateway"]
-                LB["Load Balancer 10Mbps"]
-                OKE["OKE Cluster 1.30+"]
-            end
-            subgraph NodePool["Node Pool"]
-                NODE1["Node 1: 2 OCPU<br/>12GB RAM"]
-                NODE2["Node 2: 2 OCPU<br/>12GB RAM"]
-            end
-        end
-        subgraph OCIR["Container Registry"]
-            IMG["nginx-demo:latest"]
-        end
-    end
 
-    subgraph External["External"]
-        GH["GitHub Actions<br/>CI/CD Pipeline"]
-        USR["Usuários<br/>Final"]
-    end
 
-    GH -->|push image| OCIR
-    GH -->|kubectl apply| LB
-    USR -->|HTTP/HTTPS| LB
-    LB -->|route| NODE1
-    LB -->|route| NODE2
-    NODE1 -->|pods| NGINX1["nginx-demo"]
-    NODE2 -->|pods| NGINX2["nginx-demo"]
-    OKE -->|manage| NODE1
-    OKE -->|manage| NODE2
-```
 
-```mermaid
-graph LR
-    subgraph Internet["Internet"]
-        USER["Usuário"]
-    end
-    
-    subgraph OCI["OCI"]
-        LB["Load Balancer"]
-        NGINX["Ingress NGINX"]
-        APP["nginx-demo"]
-    end
-    
-    USER -->|HTTPS| LB
-    LB -->|/healthz| NGINX
-    NGINX -->|proxy| APP
-```
 
 ## Por que OCI para Kubernetes?
 
@@ -293,22 +244,7 @@ nginx-demo-7f9c4b8a5-y4k8n  oke-node-2    Running
 
 ### Fluxo
 
-```mermaid
-sequenceDiagram
-    participant DEV as Desenvolvedor
-    participant GH as GitHub Actions
-    participant OCIR as Container Registry
-    participant OKE as OKE Cluster
-    
-    DEV->>GH: git push
-    GH->>GH: Build Docker ARM64
-    GH->>OCIR: Push imagem
-    OCIR-->>GH: Image tagged
-    GH->>OKE: kubectl apply
-    OKE-->>OKE: Rolling update
-    GH->>OKE: Verificar deployment
-    OKE-->>GH: Ready
-```
+
 
 ## Recursos CRIados
 
