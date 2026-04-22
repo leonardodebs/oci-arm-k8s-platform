@@ -11,6 +11,10 @@
 
 <br />
 
+## 🎯 Propósito
+
+Este projeto demonstra como construir uma plataforma Kubernetes de nível de produção utilizando o **Oracle Kubernetes Engine (OKE)** com instâncias **ARM Ampere A1**. O objetivo principal é fornecer uma infraestrutura altamente performática, escalável e de baixo custo (aproveitando o *Free Tier* da OCI), totalmente automatizada via Infraestrutura como Código (IaC) e GitOps.
+
 ## 🚀 Tecnologias Utilizadas
 
 Este projeto utiliza o que há de mais moderno em infraestrutura como código e cloud native:
