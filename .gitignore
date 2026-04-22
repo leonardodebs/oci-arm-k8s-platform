@@ -17,6 +17,9 @@ crash.*.log
 credentials.json
 *.pem
 *.key
+id_rsa*
+config.json
+oci_api_key.pem
 
 # Kubernetes
 kubeconfig

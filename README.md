@@ -178,7 +178,8 @@ helm install ingress-nginx ingress-nginx/ingress-nginx \
 ```bash
 kubectl apply -f kubernetes/namespaces/production.yaml
 kubectl apply -f kubernetes/deployments/nginx-demo.yaml
-kubectl apply -f kubernetes/hpa/ingress.yaml
+kubectl apply -f kubernetes/ingress/
+kubectl apply -f kubernetes/hpa/
 ```
 
 ## Estrutura do Projeto
@@ -188,8 +189,16 @@ oci-arm-k8s-platform/
 ├── terraform/
 │   ├── modules/
 │   │   ├── oke-cluster/
+│   │   │   ├── main.tf
+│   │   │   ├── variables.tf
+│   │   │   └── outputs.tf
 │   │   ├── node-pool/
+│   │   │   ├── main.tf
+│   │   │   ├── variables.tf
+│   │   │   └── outputs.tf
 │   │   └── load-balancer/
+│   │       ├── main.tf
+│   │       └── variables.tf
 │   └── environments/
 │       └── dev/
 │           ├── main.tf
@@ -201,6 +210,9 @@ oci-arm-k8s-platform/
 │   │   └── production.yaml
 │   ├── deployments/
 │   │   └── nginx-demo.yaml
+│   ├── ingress/
+│   │   ├── ingress-class.yaml
+│   │   └── nginx-demo-ingress.yaml
 │   ├── helm/
 │   │   └── ingress-nginx-values.yaml
 │   └── hpa/
@@ -214,6 +226,10 @@ oci-arm-k8s-platform/
 │   └── workflows/
 │       ├── ci-cd.yaml
 │       └── terraform.yaml
+├── docs/
+│   ├── arquitetura.md
+│   ├── runbook.md
+│   └── variaveis-ambiente.md
 └── README.md
 ```
 
@@ -277,7 +293,10 @@ sequenceDiagram
 
 ## Recursos CRIados
 
-### Terraform
+### Terraform Modules
+- [x] **oke-cluster** - Módulo OKE Cluster
+- [x] **node-pool** - Módulo Node Pool ARM
+- [x] **load-balancer** - Módulo Subnet e Route Table
 - [x] VCN com CIDR 10.0.0.0/16
 - [x] Subnet pública
 - [x] Internet Gateway
@@ -294,7 +313,7 @@ sequenceDiagram
 - [x] Deployment: nginx-demo
 - [x] Service: LoadBalancer
 - [x] ConfigMap: nginx-config
-- [x] HorizontalPodAutoscaler
+- [x] HorizontalPodAutoscaler (app + ingress)
 - [x] PodDisruptionBudget
 - [x] IngressClass: nginx
 - [x] Ingress: nginx-demo
