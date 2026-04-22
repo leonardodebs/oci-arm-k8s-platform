@@ -27,6 +27,8 @@ Este projeto utiliza o que há de mais moderno em infraestrutura como código e 
 
 ## Arquitetura
 
+![Arquitetura do Sistema](docs/architecture.png)
+
 ```mermaid
 graph TB
     subgraph OCI["Oracle Cloud Infrastructure"]
