@@ -1,0 +1,79 @@
+controller:
+  replicaCount: 2
+  image:
+    repository: registry.k8s.io/ingress-nginx/controller
+    tag: "v1.9.4"
+    pullPolicy: IfNotPresent
+  admissionWebhooks:
+    enabled: true
+  service:
+    type: LoadBalancer
+    annotations:
+      oci.oraclecloud.com/load-balancer-type: "flexible"
+      service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+      service.beta.kubernetes.io/oci-load-balancer-shape-flex-min-insurance: "10"
+    externalTrafficPolicy: Local
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    use-proxy-protocol: "false"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+    - maxSkew: 1
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 101
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+      add:
+        - NET_BIND_SERVICE
+
+defaultBackend:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: registry.k8s.io/defaultbackend/amd64
+    tag: "1.5"
+    pullPolicy: IfNotPresent
+  service:
+    type: LoadBalancer
+  resources:
+    limits:
+      cpu: 10m
+      memory: 64Mi
+    requests:
+      cpu: 5m
+      memory: 32Mi

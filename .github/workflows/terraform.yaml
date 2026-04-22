@@ -1,0 +1,50 @@
+name: Terraform Plan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.5"
+
+      - name: Setup OCI CLI
+        uses: oracle/oci-cli-setup@v3
+        with:
+          oci-api-key: ${{ secrets.OCI_API_KEY }}
+
+      - name: Terraform Init
+        working-directory: ./terraform/environments/dev
+        run: terraform init
+
+      - name: Terraform Format
+        working-directory: ./terraform/environments/dev
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        working-directory: ./terraform/environments/dev
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: ./terraform/environments/dev
+        run: terraform plan -var-file=terraform.tfvars -out=tfplan
+        env:
+          TF_VAR_tenancy_ocid: ${{ secrets.OCI_TENANCY_OCID }}
+          TF_VAR_compartment_ocid: ${{ secrets.OCI_COMPARTMENT_OCID }}
+
+      - name: Terraform Show Plan
+        working-directory: ./terraform/environments/dev
+        run: terraform show -no-color tfplan
