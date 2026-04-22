@@ -1,12 +1,29 @@
-# OCI ARM Kubernetes Platform
+<div align="center">
+  <h1>OCI ARM Kubernetes Platform</h1>
+  <p>Plataforma Kubernetes de produção usando OKE com instâncias Ampere A1 ARM na Oracle Cloud Infrastructure.</p>
 
-> Plataforma Kubernetes de produção usando OKE com instâncias Ampere A1 ARM na Oracle Cloud Infrastructure.
+  [![OCI](https://img.shields.io/badge/OCI-Oracle%20Cloud-orange?style=for-the-badge&logo=oracle)](https://www.oracle.com/cloud/)
+  [![Kubernetes](https://img.shields.io/badge/Kubernetes-1.30+-326CE5?style=for-the-badge&logo=kubernetes)](https://kubernetes.io/)
+  [![ARM](https://img.shields.io/badge/Architecture-ARM64-blue?style=for-the-badge&logo=arm)](https://amperecomputing.com/)
+  [![Terraform](https://img.shields.io/badge/Terraform-1.5+-7B42BC?style=for-the-badge&logo=terraform)](https://www.terraform.io/)
+  [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+</div>
 
-[![OCI](https://img.shields.io/badge/OCI-Oracle%20Cloud-orange)](https://www.oracle.com/cloud/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-1.30+-326CE5)](https://kubernetes.io/)
-[![ARM](https://img.shields.io/badge/Architecture-ARM64-blue)](https:// Ampere.com/)
-[![Terraform](https://img.shields.io/badge/Terraform-1.5+-7B42BC)](https://www.terraform.io/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+<br />
+
+## 🚀 Tecnologias Utilizadas
+
+Este projeto utiliza o que há de mais moderno em infraestrutura como código e cloud native:
+
+- **Cloud Provider:** [Oracle Cloud Infrastructure (OCI)](https://www.oracle.com/cloud/)
+- **Orquestração:** [Oracle Kubernetes Engine (OKE)](https://www.oracle.com/cloud/cloud-native/kubernetes-engine/)
+- **Infraestrutura como Código:** [Terraform](https://www.terraform.io/)
+- **Arquitetura de Processador:** [ARM64 (Ampere A1 Flex)](https://www.oracle.com/cloud/compute/arm/)
+- **CI/CD:** [GitHub Actions](https://github.com/features/actions)
+- **Containerização:** [Docker](https://www.docker.com/) & [Oracle Cloud Infrastructure Registry (OCIR)](https://www.oracle.com/cloud/cloud-native/container-registry/)
+- **Gerenciamento de Pacotes:** [Helm](https://helm.sh/)
+- **Ingress Controller:** [NGINX Ingress](https://kubernetes.github.io/ingress-nginx/)
+
 
 ## Arquitetura
 
