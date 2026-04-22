@@ -1,4 +1,4 @@
-FROM arm64v8/nginx:alpine
+FROM nginx:alpine
 
 LABEL maintainer="plataforma@empresa.com"
 LABEL description="Nginx demo app for OCI ARM Kubernetes Platform"
