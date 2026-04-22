@@ -1,75 +1,3 @@
-terraform {
-  required_version = ">= 1.5"
-}
-
-provider "oci" {
-  region = var.region
-}
-
-variable "region" {
-  description = "Região OCI"
-  type        = string
-  default     = "sa-saopaulo-1"
-}
-
-variable "tenancy_ocid" {
-  description = "OCID do tenancy"
-  type        = string
-  sensitive   = true
-}
-
-variable "compartment_ocid" {
-  description = "OCID do compartment"
-  type        = string
-}
-
-variable "project_name" {
-  description = "Nome do projeto"
-  type        = string
-  default     = "oci-arm-k8s"
-}
-
-variable "environment" {
-  description = "Ambiente"
-  type        = string
-  default     = "dev"
-}
-
-variable "oke_version" {
-  description = "Versão do Kubernetes para OKE"
-  type        = string
-  default     = "1.30"
-}
-
-variable "node_count" {
-  description = "Quantidade de nodes no pool"
-  type        = number
-  default     = 2
-}
-
-variable "node_ocpus" {
-  description = "OCPUs por node"
-  type        = number
-  default     = 2
-}
-
-variable "node_memory" {
-  description = "Memória GB por node"
-  type        = number
-  default     = 12
-}
-
-variable "ocir_repo" {
-  description = "Nome do repositório OCIR"
-  type        = string
-  default     = "nginx-demo"
-}
-
-variable "ssh_public_key" {
-  description = "Chave pública SSH para nodes"
-  type        = string
-}
-
 resource "oci_containerengine_cluster" "oke_cluster" {
   compartment_id     = var.compartment_ocid
   name               = "${var.project_name}-${var.environment}"
@@ -150,41 +78,28 @@ resource "oci_core_security_list" "oke_security_list" {
   }
 }
 
+data "oci_core_images" "oracle_linux_arm" {
+  compartment_id           = var.compartment_ocid
+  operating_system         = "Oracle Linux"
+  operating_system_version = "8"
+  shape                    = "VM.Standard.A1.Flex"
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
+}
+
 resource "oci_containerengine_node_pool" "oke_nodepool" {
   cluster_id         = oci_containerengine_cluster.oke_cluster.id
   compartment_id     = var.compartment_ocid
   name               = "${var.project_name}-nodepool"
   kubernetes_version = var.oke_version
-  node_image_name    = "Oracle-Linux-8.x-ARM"
+  node_source_details {
+    source_type = "IMAGE"
+    image_id    = data.oci_core_images.oracle_linux_arm.images[0].id
+  }
   node_shape         = "VM.Standard.A1.Flex"
 
   node_shape_config {
     ocpus         = var.node_ocpus
     memory_in_gbs = var.node_memory
   }
-}
-
-output "cluster_id" {
-  description = "OCID do cluster OKE"
-  value       = oci_containerengine_cluster.oke_cluster.id
-}
-
-output "cluster_endpoint" {
-  description = "Endpoint do cluster OKE"
-  value       = oci_containerengine_cluster.oke_cluster.endpoint
-}
-
-output "node_pool_id" {
-  description = "OCID do node pool"
-  value       = oci_containerengine_node_pool.oke_nodepool.id
-}
-
-output "vcn_id" {
-  description = "OCID da VCN"
-  value       = oci_core_vcn.oke_vcn.id
-}
-
-output "subnet_id" {
-  description = "OCID da subnet"
-  value       = oci_core_subnet.oke_subnet.id
 }
